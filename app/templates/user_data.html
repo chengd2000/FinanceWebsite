@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <button id="Add_income" class="btn btn-primary">Add income</button>
+    <button id="Add_outcome" class="btn btn-primary">Add outcome</button>
+    <button id="Settings" class="btn btn-primary">Settings</button>
+
+    <h2>כמה יש בחשבון</h2>
+
+    <h1>Income/Outcome Data</h1>
+    <input id="Income_input" type="checkbox" value="sort_table" checked>Income</input>
+    <input id="Outcome_input" type="checkbox" value="sort_table" checked>Outcome</input>
+    <table class="table">
+        <tr><th>מחיר</th><th>פירוט</th><th>קטגוריה</th><th>תאריך</th></tr>
+        <tr><td>מחיר</td><td>הוצאה</td><td>קטגוריה</td><td>תאריך</td></tr>
+        <tr><td>מחיר</td><td>הכנסה</td><td>קטגוריה</td><td>תאריך</td></tr>
+        <!-- הוסף שורות נוספות במידת הצורך -->
+    </table>
+
+    <h1>Conclusion</h1>
+    <h2>הקטגוריה בה הייתה ההוצאה הגדולה ביותר במצטבר</h2>
+    <h2>באיזה חודש ההוצאה הגדולה ביותר</h2>
+    <h2>באיזה חודש ההכנסה הגדולה ביותר</h2>
+    <h2>הקטגוריה בה הייתה ההכנסה הגדולה ביותר במצטבר</h2>
+
+    <h1>Diagrams</h1>
+</div>
+
+<div class="popup" id="popup_income"> 
+    <label class="form-label">Amount</label>
+    <input class="form-control" id="income_amount" type="number" min="0"/>
+    <br>
+
+    <label class="form-label">Details income</label>
+    <textarea class="form-control" id="details_income" class="form-control" placeholder="details"></textarea> 
+    <br>
+
+    <label class="form-label">Date</label>
+    <input class="form-control" id="date_income" type="date" min="1900-01-01" max="2100-01-01" />
+    <br>
+
+    <label class="form-label">Category:</label>
+    <select id="category_income" class="form-select" aria-label="Income Category">
+        <option value="" selected disabled>בחר קטגוריית הכנסה</option>
+        <option value="Salary">שכר</option>
+        <option value="Business">עסקים</option>
+        <option value="Investments">השקעות</option>
+        <option value="Other">אחר</option>
+    </select>
+    <br>
+
+    <button class="btn btn-secondary" id="closePopupBtn_income">Submit And Close</button> 
+    <button class="btn btn-secondary" id="clearValues_income">Clear Values</button> 
+</div>
+
+<div class="popup" id="popup_outcome"> 
+    <label class="form-label">Amount</label>
+    <input class="form-control" id="outcome_amount" type="number" min="0"/>
+    <br>
+
+    <label class="form-label">Details outcome</label>
+    <textarea class="form-control" id="details_outcome" class="form-control" placeholder="details"></textarea> 
+    <br>
+
+    <label class="form-label">Date</label>
+    <input class="form-control" id="date_outcome" type="date" min="1900-01-01" max="2100-01-01" />
+    <br>
+
+    <label class="form-label">Category:</label>
+    <select id="category_outcome" class="form-select" aria-label="Expense Category">
+        <option value="" selected disabled>בחר קטגוריית הוצאה</option>
+        <option value="Rent">שכירות</option>
+        <option value="Food">אוכל</option>
+        <option value="Transportation">תחבורה</option>
+        <option value="Entertainment">בידור</option>
+        <option value="Other">אחר</option>
+    </select>
+    <br>
+
+    <button class="btn btn-secondary" id="closePopupBtn_outcome">Submit And Close</button> 
+    <button class="btn btn-secondary" id="clearValues_outcome">Clear Values</button> 
+</div>
+
+{% endblock %}
