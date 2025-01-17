@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {%block content %}
-<div class="container">
+<form method = 'POST'>
+ <div class="container">
     <fieldset>
       <legend>login</legend>
       <div class="row">
@@ -10,12 +11,13 @@
       </div>
       
       <div class="row">
-        <label for="Password_login" class="form-label mt-4">Password</label>
-        <input type="password" class="form-control" id="Password_login" placeholder="Password" autocomplete="off">
+        <label for="password" class="form-label mt-4">Password</label>
+        <input type="password" class="form-control" id="password" placeholder="Password" autocomplete="off">
       </div>
       <br>
-      <button id="login_submit" class="btn btn-primary">Submit</button>
+      <button type = 'submit' id="login_submit" class="btn btn-primary">Submit</button>
       <button id="forgot_submit" class="btn btn-secondary">Forgot password</button>
   </fieldset>
 </div>
+</form>
 {% endblock %}
