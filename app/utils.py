@@ -1,63 +1,61 @@
-from flask import redirect, request, url_for
-from flask import Blueprint, render_template, request, flash, jsonify
-from flask_login import login_required, current_user
-from .models import Income, Outcome
-from . import db
-import json
-from .models import User
+from flask import Blueprint, flash, redirect, url_for, request
+from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db   ##means from __init__.py import db
-from flask_login import login_user, login_required, logout_user, current_user
+from .models import User, Income, Outcome
+from .__init__ import db
 
+# הגדרת ה-Blueprint
+utils = Blueprint('utils', __name__)
 
-
+# פונקציה לטיפול בהכנסות
+@utils.route('/income', methods=['POST'])
 def data_user_page_income():
-    
-    if request.method == 'POST': 
-        amount = request.form.get('income_amount')
-        details = request.form.get('details_income')#Gets the note from the HTML 
-        category = request.form.get('category_income')
-        date = request.form.get('date_income')
-        
+    from . import db  # ייבוא מקומי של db בתוך הפונקציה כדי למנוע מעגל ייבוא
 
-        if len(amount) < 1:
-            flash('amount is empty!', category='error') 
-        if len(category) < 1:
-            flash('category is empty!', category='error') 
-        if len(date) < 1:
-            flash('date is empty!', category='error') 
+    amount = request.form.get('income_amount')
+    details = request.form.get('details_income')
+    category = request.form.get('category_income')
+    date = request.form.get('date_income')
 
-        else:
-            new_income = Income(amount = amount, details = details, category = category, date = date, user_id = current_user.id)  #providing the schema for the note 
-            db.session.add(new_income) #adding the note to the database 
-            db.session.commit()
-            flash('Income added!', category='success')
+    if len(amount) < 1:
+        flash('amount is empty!', category='error')
+    if len(category) < 1:
+        flash('category is empty!', category='error')
+    if len(date) < 1:
+        flash('date is empty!', category='error')
 
+    else:
+        new_income = Income(amount=amount, details=details, category=category, date=date, user_id=current_user.id)
+        db.session.add(new_income)
+        db.session.commit()
+        flash('Income added!', category='success')
 
+# פונקציה לטיפול בהוצאות
+@utils.route('/outcome', methods=['POST'])
 def data_user_page_outcome():
-    
-    if request.method == 'POST': 
-        amount = request.form.get('outcome_amount')
-        details = request.form.get('details_outcome')#Gets the note from the HTML 
-        category = request.form.get('category_outcome')
-        date = request.form.get('date_outcome')
-        
+    from . import db  # ייבוא מקומי של db בתוך הפונקציה כדי למנוע מעגל ייבוא
 
-        if len(amount) < 1:
-            flash('amount is empty!', category='error') 
-        if len(category) < 1:
-            flash('category is empty!', category='error') 
-        if len(date) < 1:
-            flash('date is empty!', category='error') 
+    amount = request.form.get('outcome_amount')
+    details = request.form.get('details_outcome')
+    category = request.form.get('category_outcome')
+    date = request.form.get('date_outcome')
 
-        else:
-            new_outcome = Outcome(amount = amount, details = details, category = category, date = date, user_id = current_user.id)  #providing the schema for the note 
-            db.session.add(new_outcome) #adding the note to the database 
-            db.session.commit()
-            flash('Outcome added!', category='success')
+    if len(amount) < 1:
+        flash('amount is empty!', category='error')
+    if len(category) < 1:
+        flash('category is empty!', category='error')
+    if len(date) < 1:
+        flash('date is empty!', category='error')
 
+    else:
+        new_outcome = Outcome(amount=amount, details=details, category=category, date=date, user_id=current_user.id)
+        db.session.add(new_outcome)
+        db.session.commit()
+        flash('Outcome added!', category='success')
 
-def login_user():
+# פונקציה להתחברות של המשתמש
+@utils.route('/login', methods=['POST'])
+def login_user_custom(request):
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -73,14 +71,16 @@ def login_user():
         else:
             flash('Incorrect username/password, try again.', category='error')
 
-
+# פונקציה להתנתקות
+@utils.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index.html'))
 
-
-def sign_in_user():
+# פונקציה לרישום משתמש חדש
+@utils.route('/signup', methods=['POST'])
+def sign_in_user(request):
     if request.method == 'POST':
         email = request.form.get('email')
         username = request.form.get('username')
@@ -99,14 +99,10 @@ def sign_in_user():
         elif len(password) < 7:
             flash('Password must be at least 7 characters.', category='error')
         else:
-            new_user = User(email=email, username=username, password=generate_password_hash(
-                password, method='sha256'))
+            new_user = User(email=email, username=username,
+                            password=generate_password_hash(password, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('utils.user_data'))
-
-
-
-

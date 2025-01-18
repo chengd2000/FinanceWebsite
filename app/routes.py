@@ -1,37 +1,31 @@
-from flask import Blueprint, render_template, request, jsonify
-import requests
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db   ##means from __init__.py import db
+from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 from .utils import *
 
-main = Blueprint('main', __name__)
+routes = Blueprint('routes', __name__)  # שינה את השם מ-main ל-routes
 
-@main.route('/')
+@routes.route('/')
 def home():
     return render_template('index.html')
 
-@main.route('/login')
+@routes.route('/login', methods=['GET', 'POST'])
 def login():
-    login_user()
+    login_user(request)
     return render_template('login.html', user=current_user)
 
-
-@main.route('/sign_in')
+@routes.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
-    sign_in_user()
+    sign_in_user(request)
     return render_template('sign_in.html', user=current_user)
 
-
-@main.route('/user_data')
+@routes.route('/user_data', methods=['GET', 'POST'])
 def user_data():
-    data_user_page_income()
-    data_user_page_outcome()
+    data_user_page_income(request)
+    data_user_page_outcome(request)
     return render_template('user_data.html')
-
-
 
 
 
