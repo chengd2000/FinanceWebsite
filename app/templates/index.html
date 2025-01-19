@@ -1,14 +1,19 @@
 {% extends "base.html" %}
+
 {% block title %}Home{% endblock %}
+
 {% block content %}
-
-<div class="container">
-<button id="login" class="btn">login</button>
-<br>
-<button id="sign_in" class="btn">sign in</button>
+<div class="container" style="position: relative; height: 100vh; background-image: url('path_to_your_image.jpg'); background-size: cover;">
+  <!-- תיבה קטנה וממוקדת במרכז עם רקע שקוף -->
+  <div class="d-flex justify-content-center align-items-center" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+    <div class="text-center text-white p-5" style="background-color: rgba(0, 0, 0, 0.6); border-radius: 10px;">
+      <h1 class="mb-4 text-light">Finance Website</h1>
+      <p class="mb-4 text-light">Please choose one of the options below to continue:</p>
+      <div class="d-grid gap-3 col-6 mx-auto">
+        <button id="login" class="btn btn-primary btn-lg">Login</button>
+        <button id="sign_in" class="btn btn-secondary btn-lg">Sign In</button>
+      </div>
+    </div>
+  </div>
 </div>
-
 {% endblock %}
-
-
-

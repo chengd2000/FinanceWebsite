@@ -1,90 +1,121 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div>
-    <button id="logout" class="btn btn-secondary">Logout</button>
-    <button id="Add_income" class="btn btn-primary">Add income</button>
-    <button id="Add_outcome" class="btn btn-primary">Add outcome</button>
-    <button id="Settings" class="btn btn-secondary">Settings</button>
+<div class="container mt-4">
+    <!-- כותרת הדף -->
+    <div class="text-center mb-4">
+        <h1 class="display-4">ניהול חשבון פיננסי</h1>
+        <p class="lead">מעקב אחר הכנסות והוצאות, גרפים ונתונים מפורטים</p>
+    </div>
 
-    <h2>כמה יש בחשבון</h2>
+    <!-- כפתורים לניהול -->
+    <div class="d-flex justify-content-center gap-3 mb-5">
+        <button id="logout" class="btn btn-danger">Logout</button>
+        <button id="Add_income" class="btn btn-success">Add Income</button>
+        <button id="Add_outcome" class="btn btn-warning">Add Outcome</button>
+        <button id="Settings" class="btn btn-secondary">Settings</button>
+    </div>
 
-    <h1>Income/Outcome Data</h1>
-    <input name = "Income_input" id="Income_input" type="checkbox" value="sort_table" checked>Income</input>
-    <input name = "Outcome_input" id="Outcome_input" type="checkbox" value="sort_table" checked>Outcome</input>
-    <table class="table">
-        <tr><th>מחיר</th><th>פירוט</th><th>קטגוריה</th><th>תאריך</th></tr>
-        <tr><td>מחיר</td><td>הוצאה</td><td>קטגוריה</td><td>תאריך</td></tr>
-        <tr><td>מחיר</td><td>הכנסה</td><td>קטגוריה</td><td>תאריך</td></tr>
-        <!-- הוסף שורות נוספות במידת הצורך -->
-    </table>
+    <!-- יתרת החשבון -->
+    <div class="text-center mb-4">
+        <h2 class="text-primary">מצב החשבון: <span id="account_balance">₪12,345</span></h2>
+    </div>
 
-    <h1>Conclusion</h1>
-    <h2>הקטגוריה בה הייתה ההוצאה הגדולה ביותר במצטבר</h2>
-    <h2>באיזה חודש ההוצאה הגדולה ביותר</h2>
-    <h2>באיזה חודש ההכנסה הגדולה ביותר</h2>
-    <h2>הקטגוריה בה הייתה ההכנסה הגדולה ביותר במצטבר</h2>
+    <!-- טבלת הכנסות והוצאות -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3>Income/Outcome Data</h3>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-center gap-3 mb-3">
+                <div>
+                    <input type="checkbox" id="Income_input" checked>
+                    <label for="Income_input">Show Income</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="Outcome_input" checked>
+                    <label for="Outcome_input">Show Outcome</label>
+                </div>
+            </div>
+            <table class="table table-striped table-hover">
+                <thead class="table-primary">
+                    <tr>
+                        <th>מחיר</th>
+                        <th>פירוט</th>
+                        <th>קטגוריה</th>
+                        <th>תאריך</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>₪500</td>
+                        <td>שכירות</td>
+                        <td>הוצאה</td>
+                        <td>2025-01-01</td>
+                    </tr>
+                    <tr>
+                        <td>₪2000</td>
+                        <td>שכר</td>
+                        <td>הכנסה</td>
+                        <td>2025-01-10</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <h1>Diagrams</h1>
+    <!-- מסקנות -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h3>מסקנות</h3>
+        </div>
+        <div class="card-body">
+            <ul>
+                <li>הקטגוריה בה הייתה ההוצאה הגדולה ביותר: <strong>שכירות</strong></li>
+                <li>החודש עם ההוצאה הגדולה ביותר: <strong>ינואר</strong></li>
+                <li>החודש עם ההכנסה הגדולה ביותר: <strong>פברואר</strong></li>
+                <li>הקטגוריה בה הייתה ההכנסה הגדולה ביותר: <strong>שכר</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- גרפים -->
+    <div class="text-center">
+        <h3>גרפים</h3>
+        <p>כאן ניתן להוסיף גרפים באמצעות ספריות כמו Chart.js</p>
+    </div>
 </div>
 
-<div class="popup" id="popup_income"> 
-    <form method = 'POST'>
-    <label class="form-label">Amount</label>
-    <input name = "income_amount" class="form-control" id="income_amount" type="number" min="0"/>
-    <br>
-
-    <label class="form-label">Details income</label>
-    <textarea class="form-control" id="details_income" class="form-control" placeholder="details"></textarea> 
-    <br>
-
-    <label class="form-label">Date</label>
-    <input name = "date_income" class="form-control" id="date_income" type="date" min="1900-01-01" max="2100-01-01" />
-    <br>
-
-    <label class="form-label">Category:</label>
-    <select id="category_income" class="form-select" aria-label="Income Category">
-        <option value="" selected disabled>בחר קטגוריית הכנסה</option>
-        <option value="Salary">שכר</option>
-        <option value="Business">עסקים</option>
-        <option value="Investments">השקעות</option>
-        <option value="Other">אחר</option>
-    </select>
-    <br>
-
-    <button class="btn btn-secondary" id="closePopupBtn_income">Submit And Close</button> 
-    <button class="btn btn-secondary" id="clearValues_income">Clear Values</button> 
-</form>
-</div>
-
-<div class="popup" id="popup_outcome"> 
-    <form method = 'POST'>
-    <label class="form-label">Amount</label>
-    <input name = "outcome_amount" class="form-control" id="outcome_amount" type="number" min="0"/>
-    <br>
-
-    <label class="form-label">Details outcome</label>
-    <textarea name = "details_outcome" class="form-control" id="details_outcome" class="form-control" placeholder="details"></textarea> 
-    <br>
-
-    <label class="form-label">Date</label>
-    <input name = "date_outcome" class="form-control" id="date_outcome" type="date" min="1900-01-01" max="2100-01-01" />
-    <br>
-
-    <label class="form-label">Category:</label>
-    <select name = "category_outcome" id="category_outcome" class="form-select" aria-label="Expense Category">
-        <option value="" selected disabled>בחר קטגוריית הוצאה</option>
-        <option value="Rent">שכירות</option>
-        <option value="Food">אוכל</option>
-        <option value="Transportation">תחבורה</option>
-        <option value="Entertainment">בידור</option>
-        <option value="Other">אחר</option>
-    </select>
-    <br>
-
-    <button class="btn btn-secondary" id="closePopupBtn_outcome">Submit And Close</button> 
-    <button class="btn btn-secondary" id="clearValues_outcome">Clear Values</button> 
-</form>
+<!-- חלונות קופצים להכנסות והוצאות -->
+<div class="modal fade" id="popup_income" tabindex="-1" aria-labelledby="popupIncomeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="popupIncomeLabel">Add Income</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    <label class="form-label">Amount</label>
+                    <input name="income_amount" class="form-control" id="income_amount" type="number" min="0" />
+                    <label class="form-label mt-3">Details</label>
+                    <textarea class="form-control" id="details_income" placeholder="Details"></textarea>
+                    <label class="form-label mt-3">Date</label>
+                    <input name="date_income" class="form-control" id="date_income" type="date" />
+                    <label class="form-label mt-3">Category</label>
+                    <select id="category_income" class="form-select">
+                        <option value="Salary">שכר</option>
+                        <option value="Business">עסקים</option>
+                        <option value="Investments">השקעות</option>
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

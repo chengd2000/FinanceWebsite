@@ -1,9 +1,12 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
+    background-image: url('/static/img/finance.jpg');
+    background-size: cover; /* מכסה את כל העמוד */
+    background-position: center; /* מרכז את התמונה */
+    background-attachment: fixed; /* משאיר את הרקע קבוע בעת גלילה */
+    font-family: Arial, sans-serif; /* עיצוב הטקסט */
+    color: #333; /* צבע טקסט */
+  }
+  
 
 nav {
     background: #333;
@@ -41,3 +44,6 @@ nav a {
     background-color: #fff;
 }
 
+h1, h2, p{
+    color: #fff;
+}
