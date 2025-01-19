@@ -3,6 +3,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, Income, Outcome
 from . import db
+from datetime import datetime
 
 utils = Blueprint('utils', __name__)
 
@@ -31,14 +32,18 @@ def data_user_page_income():
     details = request.form.get('details_income')
     category = request.form.get('category_income')
     date = request.form.get('date_income')
+    print(" היחהו איזה עצבים")
 
     if not amount or not category or not date:
         flash('All fields are required!', category='error')
     else:
+        # המרת תאריך
+        date = datetime.strptime(date, '%Y-%m-%d').date()
         new_income = Income(amount=amount, details=details, category=category, date=date, user_id=current_user.id)
         db.session.add(new_income)
         db.session.commit()
         flash('Income added!', category='success')
+        print("איזה עצבים")
 
     return redirect(url_for('routes.user_data'))
 
@@ -52,6 +57,8 @@ def data_user_page_outcome():
     if not amount or not category or not date:
         flash('All fields are required!', category='error')
     else:
+        # המרת תאריך
+        date = datetime.strptime(date, '%Y-%m-%d').date()
         new_outcome = Outcome(amount=amount, details=details, category=category, date=date, user_id=current_user.id)
         db.session.add(new_outcome)
         db.session.commit()
@@ -65,7 +72,7 @@ def login_user_handler():
     password = request.form.get('password')
 
     user = User.query.filter_by(username=username).first()
-    if user and check_password_hash(user.password, password):
+    if user and (user.password == password):
         flash('Logged in successfully!', category='success')
         login_user(user, remember=True)
         return redirect(url_for('routes.user_data'))
@@ -81,25 +88,36 @@ def logout():
 
 @utils.route('/sign_in', methods=['POST'])
 def sign_in_user_handler():
+    print(1)
     email = request.form.get('email')
     username = request.form.get('username')
     password = request.form.get('password')
     password_again = request.form.get('password_again')
 
-    if User.query.filter_by(email=email).first():
-        flash('Email already exists.', category='error')
-    elif len(email) < 4 or len(username) < 2 or len(password) < 7:
+    print(2)
+    if User.query.filter_by(username=username).first():
+        flash('Username already exists.', category='error')
+    elif len(email) < 4 or len(username) < 2:
         flash('Invalid input data.', category='error')
     elif password != password_again:
         flash('Passwords don\'t match.', category='error')
     else:
-        new_user = User(email=email, username=username,
-                        password=generate_password_hash(password, method='sha256'))
-        db.session.add(new_user)
-        db.session.commit()
+        print(3)
+        new_user = User(username=username, email=email, 
+                        password=password)
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            print("User added successfully")
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
+        print(4)
         login_user(new_user, remember=True)
         flash('Account created!', category='success')
-        return redirect(url_for('routes.user_data'))
+        return "5"
+        #return redirect(url_for('routes.user_data'))
 
+    print(250)
     return redirect(url_for('routes.sign_in'))
 

@@ -17,11 +17,12 @@ def login():
 @routes.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
     if request.method == 'POST':
+        print("in def sign in")
         return sign_in_user_handler()
     return render_template('sign_in.html', user=current_user)
 
 @routes.route('/user_data', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def user_data():
     if request.method == 'POST':
         if 'income_amount' in request.form:

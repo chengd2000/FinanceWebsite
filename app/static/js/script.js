@@ -59,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function Add_income() {
+        console.log("check");
         if (popup_income) popup_income.style.display = "block";
     }
 

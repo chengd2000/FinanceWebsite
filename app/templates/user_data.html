@@ -87,35 +87,71 @@
 </div>
 
 <!-- חלונות קופצים להכנסות והוצאות -->
-<div class="modal fade" id="popup_income" tabindex="-1" aria-labelledby="popupIncomeLabel" aria-hidden="true">
+    <div class = "popup" id="popup_income">
     <div class="modal-dialog">
+        <form method="POST">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="popupIncomeLabel">Add Income</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button id = "closePopupBtn_income" type="button" class="btn-close" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST">
                     <label class="form-label">Amount</label>
                     <input name="income_amount" class="form-control" id="income_amount" type="number" min="0" />
                     <label class="form-label mt-3">Details</label>
-                    <textarea class="form-control" id="details_income" placeholder="Details"></textarea>
+                    <textarea name="details_income" class="form-control" id="details_income" placeholder="Details"></textarea>
                     <label class="form-label mt-3">Date</label>
                     <input name="date_income" class="form-control" id="date_income" type="date" />
                     <label class="form-label mt-3">Category</label>
-                    <select id="category_income" class="form-select">
+                    <select name="category_income" id="category_income" class="form-select">
+                        <option value="" selected disabled>בחר קטגוריית הכנסה</option>
                         <option value="Salary">שכר</option>
                         <option value="Business">עסקים</option>
                         <option value="Investments">השקעות</option>
                     </select>
-                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" id="clearValues_income">Clear</button>
             </div>
         </div>
+    </form>
     </div>
 </div>
 
+
+<div class="popup" id="popup_outcome"> 
+    <div class="modal-dialog">
+    <form method = 'POST'>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="popupOutcomeLabel">Add Outcome</h5>
+                <button id = "closePopupBtn_outcome" type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+    <label class="form-label">Amount</label>
+    <input name = "outcome_amount" class="form-control" id="outcome_amount" type="number" min="0"/>
+
+    <label class="form-label mt-3">Details</label>
+    <textarea name = "details_outcome" class="form-control" id="details_outcome" class="form-control" placeholder="details"></textarea> 
+
+    <label class="form-label mt-3">Date</label>
+    <input name = "date_outcome" class="form-control" id="date_outcome" type="date" min="1900-01-01" max="2100-01-01" />
+
+    <label class="form-label mt-3">Category</label>
+    <select name = "category_outcome" id="category_outcome" class="form-select" aria-label="Expense Category">
+        <option value="" selected disabled>בחר קטגוריית הוצאה</option>
+        <option value="Rent">שכירות</option>
+        <option value="Food">אוכל</option>
+    </select>
+</div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-secondary" id="clearValues_outcome">Clear</button>
+    </div>
+</div>
+</form>
+</div>
+</div>
 {% endblock %}
