@@ -80,11 +80,6 @@ def login_user_handler():
         flash('Incorrect username/password, try again.', category='error')
         return redirect(url_for('routes.login'))
 
-@utils.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('routes.home'))
 
 @utils.route('/sign_in', methods=['POST'])
 def sign_in_user_handler():

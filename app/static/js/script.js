@@ -88,4 +88,30 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("date_outcome").value = "";
         document.getElementById("category_outcome").value = "";
     }
+
+
+    function deleteIncome(id) {
+        fetch("/delete-income", {
+          method: "POST",
+          body: JSON.stringify({ id: id }),
+        }).then((_res) => {
+          window.location.href = "/user_data";
+        });
+    }
+
+    document.querySelectorAll(".close").forEach((button) => {
+        button.addEventListener("click", () => {
+          const id = button.getAttribute("data-id");
+          deleteIncome(id);
+        });
+      });
+
+    function deleteOutcome(id) {
+        fetch("/delete-outcome", {
+          method: "POST",
+          body: JSON.stringify({ id: id }),
+        }).then((_res) => {
+          window.location.href = "/";
+        });
+    }
 });

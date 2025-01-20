@@ -10,7 +10,7 @@
 
     <!-- כפתורים לניהול -->
     <div class="d-flex justify-content-center gap-3 mb-5">
-        <button id="logout" class="btn btn-danger">Logout</button>
+        <a class="btn btn-danger" id="logout" href="/logout">Logout</a>
         <button id="Add_income" class="btn btn-success">Add Income</button>
         <button id="Add_outcome" class="btn btn-warning">Add Outcome</button>
         <button id="Settings" class="btn btn-secondary">Settings</button>
@@ -47,18 +47,30 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for income in user.incomes %}
                     <tr>
-                        <td>₪500</td>
-                        <td>שכירות</td>
-                        <td>הוצאה</td>
-                        <td>2025-01-01</td>
-                    </tr>
+                        <td>{{ income.amount }}</td>
+                        <td>{{ income.details }}</td>
+                        <td>{{ income.category }}</td>
+                        <td>{{ income.date }}</td>
+                        <td>
+                            <button type="button" class="close btn-close" data-id="{{ income.id }}"></button>
+                          </td>
+                          
+                    </tr>    
+                    {% endfor %}
+                    {% for outcome in user.outcomes %}
                     <tr>
-                        <td>₪2000</td>
-                        <td>שכר</td>
-                        <td>הכנסה</td>
-                        <td>2025-01-10</td>
-                    </tr>
+                        <td>{{ outcome.amount }}</td>
+                        <td>{{ outcome.details }}</td>
+                        <td>{{ outcome.category }}</td>
+                        <td>{{ outcome.date }}</td>
+                        <td>
+                            <!-- <button type="button" class="btn-close" onClick="deleteOutcome({{ outcome.id }})">
+                          </button> -->
+                        </td>
+                    </tr> 
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
