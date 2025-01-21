@@ -13,12 +13,12 @@
         <a class="btn btn-danger" id="logout" href="/logout">Logout</a>
         <button id="Add_income" class="btn btn-success">Add Income</button>
         <button id="Add_outcome" class="btn btn-warning">Add Outcome</button>
-        <button id="Settings" class="btn btn-secondary">Settings</button>
+        <button id="Settings" class="btn btn-secondary">Change Password</button>
     </div>
 
     <!-- יתרת החשבון -->
     <div class="text-center mb-4">
-        <h2 class="text-primary">מצב החשבון: <span id="account_balance">₪12,345</span></h2>
+        <h2 class="text-primary">מצב החשבון: <span id="account_balance">{{ sum }}</span></h2>
     </div>
 
     <!-- טבלת הכנסות והוצאות -->
@@ -29,48 +29,42 @@
         <div class="card-body">
             <div class="d-flex justify-content-center gap-3 mb-3">
                 <div>
-                    <input type="checkbox" id="Income_input" >
-                    <label for="Income_input">Show Income</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="Outcome_input" >
-                    <label for="Outcome_input">Show Outcome</label>
+                    <button id="Income_input" class="btn btn-info">Show Only Incomes</button>
+                    <button id="Outcome_input" class="btn btn-info">Show Only Outcomes</button>
+                    <button id="both_input" class="btn btn-info">Show Incomes and Outcomes</button>
                 </div>
             </div>
             <table class="table table-striped table-hover">
                 <thead class="table-primary">
                     <tr>
-                        <th>מחיר</th>
+                        <th></th>
+                        <th>
+                            <button class="btn btn-outline-primary" id="amount_filter">כמות</button>
+                        </th>
+                        
+                        <th>                        
+                            <button class="btn btn-outline-primary" id="date_filter">תאריך</button>
+                        </th>
+                        <th> 
+                            קטגוריה
+                        </th>
                         <th>פירוט</th>
-                        <th>קטגוריה</th>
-                        <th>תאריך</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for income in teme %}
-                    <tr>
-                        <td>{{ income.amount }}</td>
-                        <td>{{ income.details }}</td>
-                        <td>{{ income.category }}</td>
-                        <td>{{ income.date }}</td>
+                    {% for item in temp %}
+                    <tr class="{% if item.inOrOut == 'income' %}income-bg{% else %}outcome-bg{% endif %}">                        
+                        <td>{% if item.inOrOut == 'income' %}+{% else %}-{% endif %}</td>
+                        <td>{{ item.amount }}</td>
+                        <td>{{ item.date }}</td>
+                        <td>{{ item.category }}</td>
+                        <td>{{ item.details }}</td>
                         <td>
-                            <button type="button" class="close btn-close" data-id="{{ income.id }}"></button>
-                          </td>
-                          
+                            <button type="button" class="{% if item.inOrOut == 'income' %}deleteIncome{% else %}deleteOutcome{% endif %} btn-close" data-id="{{ item.id }}"></button>
+                        </td>        
                     </tr>    
                     {% endfor %}
-                    <!-- {% for outcome in user.outcomes %}
-                    <tr>
-                        <td>{{ outcome.amount }}</td>
-                        <td>{{ outcome.details }}</td>
-                        <td>{{ outcome.category }}</td>
-                        <td>{{ outcome.date }}</td>
-                        <td>
-                            <button type="button" class="btn-close" onClick="deleteOutcome({{ outcome.id }})">
-                          </button> -->
-                        <!-- </td>
-                    </tr> 
-                    {% endfor %} -->
                 </tbody>
             </table>
         </div>
@@ -83,10 +77,13 @@
         </div>
         <div class="card-body">
             <ul>
-                <li>הקטגוריה בה הייתה ההוצאה הגדולה ביותר: <strong>שכירות</strong></li>
-                <li>החודש עם ההוצאה הגדולה ביותר: <strong>ינואר</strong></li>
-                <li>החודש עם ההכנסה הגדולה ביותר: <strong>פברואר</strong></li>
-                <li>הקטגוריה בה הייתה ההכנסה הגדולה ביותר: <strong>שכר</strong></li>
+                <li>ההוצאה הגדולה ביותר: <strong>{{max_outcome}}</strong></li>
+                <li>הקטגוריה בה הייתה ההוצאה הגדולה ביותר: <strong>{{ max_outcome_category }}</strong></li>
+                <li>החודש עם ההוצאה הגדולה ביותר: <strong>{{ max_outcome_date }}</strong></li>
+                <li>ההכנסה הגדולה ביותר: <strong>{{max_income}}</strong></li>
+                <li>הקטגוריה בה הייתה ההכנסה הגדולה ביותר: <strong>{{ max_income_category }}</strong></li>
+                <li>החודש עם ההכנסה הגדולה ביותר: <strong>{{ max_income_date }}</strong></li>
+                
             </ul>
         </div>
     </div>
@@ -173,12 +170,12 @@
         <form method="POST">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="popupIncomeLabel">Settings</h5>
+                <h5 class="modal-title" id="popupIncomeLabel">Change Password</h5>
                 <button id = "closePopupBtn_settings" type="button" class="btn-close" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                     <label class="form-label">Change password</label>
-                    <input name="change_password" class="form-control" id="change_password" type="password" /> 
+                    <input name="password" class="form-control" id="password" type="password" /> 
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>

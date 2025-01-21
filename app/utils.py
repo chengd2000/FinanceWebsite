@@ -4,6 +4,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, Income, Outcome
 from . import db
 from datetime import datetime
+from sqlalchemy import create_engine, update 
+from sqlalchemy.orm import sessionmaker
 
 utils = Blueprint('utils', __name__)
 
@@ -45,7 +47,7 @@ def data_user_page_income():
         flash('Income added!', category='success')
         print("איזה עצבים")
 
-    return redirect(url_for('routes.user_data'))
+    return redirect(url_for('routes.user_data',income='true',outcome='false',filterBy='date'))
 
 @utils.route('/outcome', methods=['POST'])
 def data_user_page_outcome():
@@ -64,7 +66,7 @@ def data_user_page_outcome():
         db.session.commit()
         flash('Outcome added!', category='success')
 
-    return redirect(url_for('routes.user_data'))
+    return redirect(url_for('routes.user_data',income='false',outcome='true',filterBy='date'))
 
 @utils.route('/login', methods=['POST'])
 def login_user_handler():
@@ -75,7 +77,7 @@ def login_user_handler():
     if user and (user.password == password):
         flash('Logged in successfully!', category='success')
         login_user(user, remember=True)
-        return redirect(url_for('routes.user_data'))
+        return redirect(url_for('routes.user_data',income='true',outcome='true',filterBy='date'))
     else:
         flash('Incorrect username/password, try again.', category='error')
         return redirect(url_for('routes.login'))
@@ -117,9 +119,20 @@ def sign_in_user_handler():
     return redirect(url_for('routes.sign_in'))
 
 
-# def change_password():
-#     password_new = request.form.get('password')
-#     if user.password != password_new:
-#         new_outcome = Outcome(amount=amount, details=details, category=category, date=date, user_id=current_user.id)
-#             db.session.add(new_outcome)
-#             db.session.commit()
+def change_password():
+    password_new = request.form.get('password')
+    if current_user.password != password_new:
+        db.session.execute(update(User).where(User.id == current_user.id).values(password=password_new)) 
+        db.session.commit()
+    return redirect(url_for('routes.user_data',income='true',outcome='false',filterBy='date'))
+
+# Function to convert custom objects to dictionaries
+def convert_to_dict(item, inOrOut):
+    return {
+        'id':item.id,
+        'date': item.date,
+        'amount': item.amount,
+        'category':item.category,
+        'details':item.details,
+        'inOrOut': inOrOut
+    }

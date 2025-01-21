@@ -1,8 +1,10 @@
 from datetime import datetime
 from flask import Blueprint, json, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, logout_user
-from .utils import login_user_handler, sign_in_user_handler, data_user_page_income, data_user_page_outcome
+from .utils import change_password, convert_to_dict, login_user_handler, sign_in_user_handler, data_user_page_income, data_user_page_outcome
 from . import db
+from .models import Income, Outcome, User  # Adjust the import based on your project structure
+import calendar
 
 routes = Blueprint('routes', __name__)
 
@@ -35,59 +37,105 @@ def sign_in():
 @routes.route('/user_data', methods=['GET', 'POST'])
 # @login_required
 def user_data():
-    income = request.args.get('income', 'false').lower() == 'true'
-    outcome = request.args.get('outcome', 'false').lower() == 'true'
-
+    income = request.args.get('income', '')
+    outcome = request.args.get('outcome', '')
+    filter=request.args.get('filterBy', '')
     if request.method == 'POST':
         if 'income_amount' in request.form:
             return data_user_page_income()
         elif 'outcome_amount' in request.form:
             return data_user_page_outcome()
+        else:
+            return change_password()
 
-    temp = [current_user.incomes, current_user.outcomes]
 
-    # שרשור הרשימות
-    merged = temp[0] + temp[1]
-    merged.sort(key=lambda x: x.date if isinstance(x.date, datetime) else datetime.strptime(x.date, "%Y-%m-%d"))
 
+# Sample data
+    temp = [
+        {'items': current_user.incomes, 'inOrOut': 'income'},
+        {'items': current_user.outcomes, 'inOrOut': 'outcome'}
+    ]
+
+    sum=0
+
+    # Merging items into a single list with 'inOrOut' field
+    merged = [
+        convert_to_dict(item, temp[0]['inOrOut']) for item in temp[0]['items']
+    ] + [
+        convert_to_dict(item, temp[1]['inOrOut']) for item in temp[1]['items']
+    ]
+    onlyIns=[convert_to_dict(item, temp[0]['inOrOut']) for item in temp[0]['items']]
+    onlyOuts=[convert_to_dict(item, temp[1]['inOrOut']) for item in temp[1]['items']]
+    
+    # Creating the result list based on conditions
     res = []
 
-    if income and outcome:
+    if income == 'true' and outcome == 'true':
         res = merged
-    elif income:
-        res = temp[0]
-    elif outcome:
-        res = temp[1]
+    elif income == 'true':
+        res = onlyIns
+    elif outcome == 'true':
+        res = onlyOuts
 
+    # Sorting the result list by the 'date' field
+    res = sorted(res, key=lambda x: x['date'] if isinstance(x['date'], datetime) else datetime.strptime(x['date'], "%Y-%m-%d"))
+    if(filter=='amount'):
+        res = sorted(res, key=lambda x: x['amount'], reverse=True)
+    for item in merged:
+        if item['inOrOut']=='income':
+            sum+=item['amount']
+        else:
+            sum-=item['amount']
+    max_income=0
+    max_income_category=""
+    max_income_date=""
+    for item in onlyIns:
+        if item['amount']>max_income:
+            max_income=item['amount']
+            max_income_category=item['category']
+            max_income_date = calendar.month_name[item['date'].month] + ", " + str(item['date'].year)
+    max_outcome=0
+    max_outcome_category=""
+    max_outcome_date=""
+    for item in onlyOuts:
+        if item['amount']>max_outcome:
+            max_outcome=item['amount']
+            max_outcome_category=item['category']
+            max_outcome_date = calendar.month_name[item['date'].month] + ", " + str(item['date'].year)
     # עדכון temp עם הרשימה הממוינת
-    temp = res
     print(res)
-    return render_template('user_data.html', user=current_user, temp=temp)
 
+
+    return render_template('user_data.html',income='true',outcome='true', user=current_user, temp=res,sum=sum,max_income=max_income,max_income_category=max_income_category,max_income_date=max_income_date,max_outcome=max_outcome,max_outcome_category=max_outcome_category,max_outcome_date=max_outcome_date)
 
 
 
 @routes.route('/delete-income', methods=['POST'])
 def delete_income():  
-    income = json.loads(request.data) # this function expects a JSON from the INDEX.js file 
-    id = income['id']
-    income = income.query.get(id)
-    if income:
-        if income.user_id == current_user.id:
+    try:
+        income_data = json.loads(request.data)  # this function expects a JSON from the INDEX.js file 
+        id = income_data['id']
+        income = Income.query.get(id)
+        if income and income.user_id == current_user.id:
             db.session.delete(income)
             db.session.commit()
-
-    return jsonify({})
-
+            return jsonify({"success": True})
+        else:
+            return jsonify({"error": "Income not found or unauthorized"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @routes.route('/delete-outcome', methods=['POST'])
 def delete_outcome():  
-    outcome = json.loads(request.data) # this function expects a JSON from the INDEX.js file 
-    id = outcome['id']
-    outcome = outcome.query.get(id)
-    if outcome:
-        if outcome.user_id == current_user.id:
+    try:
+        outcome_data = json.loads(request.data)  # this function expects a JSON from the INDEX.js file 
+        id = outcome_data['id']
+        outcome = Outcome.query.get(id)
+        if outcome and outcome.user_id == current_user.id:
             db.session.delete(outcome)
             db.session.commit()
-
-    return jsonify({})
+            return jsonify({"success": True})
+        else:
+            return jsonify({"error": "Outcome not found or unauthorized"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

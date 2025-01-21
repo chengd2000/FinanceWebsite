@@ -47,3 +47,11 @@ nav a {
 h1, h2, p{
     color: #fff;
 }
+table tbody tr.income-bg {
+    background-color: green !important;
+}
+
+table tbody tr.outcome-bg {
+    background-color: red !important;
+}
+
