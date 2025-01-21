@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Blueprint, json, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, logout_user
 from .utils import login_user_handler, sign_in_user_handler, data_user_page_income, data_user_page_outcome
@@ -30,15 +31,38 @@ def sign_in():
         return sign_in_user_handler()
     return render_template('sign_in.html', user=current_user)
 
+
 @routes.route('/user_data', methods=['GET', 'POST'])
-#@login_required
+# @login_required
 def user_data():
+    income = request.args.get('income', 'false').lower() == 'true'
+    outcome = request.args.get('outcome', 'false').lower() == 'true'
+
     if request.method == 'POST':
         if 'income_amount' in request.form:
             return data_user_page_income()
         elif 'outcome_amount' in request.form:
             return data_user_page_outcome()
-    return render_template('user_data.html', user=current_user)
+
+    temp = [current_user.incomes, current_user.outcomes]
+
+    # שרשור הרשימות
+    merged = temp[0] + temp[1]
+    merged.sort(key=lambda x: x.date if isinstance(x.date, datetime) else datetime.strptime(x.date, "%Y-%m-%d"))
+
+    res = []
+
+    if income and outcome:
+        res = merged
+    elif income:
+        res = temp[0]
+    elif outcome:
+        res = temp[1]
+
+    # עדכון temp עם הרשימה הממוינת
+    temp = res
+    print(res)
+    return render_template('user_data.html', user=current_user, temp=temp)
 
 
 

@@ -116,3 +116,10 @@ def sign_in_user_handler():
     print(250)
     return redirect(url_for('routes.sign_in'))
 
+
+# def change_password():
+#     password_new = request.form.get('password')
+#     if user.password != password_new:
+#         new_outcome = Outcome(amount=amount, details=details, category=category, date=date, user_id=current_user.id)
+#             db.session.add(new_outcome)
+#             db.session.commit()

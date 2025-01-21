@@ -29,11 +29,11 @@
         <div class="card-body">
             <div class="d-flex justify-content-center gap-3 mb-3">
                 <div>
-                    <input type="checkbox" id="Income_input" checked>
+                    <input type="checkbox" id="Income_input" >
                     <label for="Income_input">Show Income</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="Outcome_input" checked>
+                    <input type="checkbox" id="Outcome_input" >
                     <label for="Outcome_input">Show Outcome</label>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for income in user.incomes %}
+                    {% for income in teme %}
                     <tr>
                         <td>{{ income.amount }}</td>
                         <td>{{ income.details }}</td>
@@ -59,18 +59,18 @@
                           
                     </tr>    
                     {% endfor %}
-                    {% for outcome in user.outcomes %}
+                    <!-- {% for outcome in user.outcomes %}
                     <tr>
                         <td>{{ outcome.amount }}</td>
                         <td>{{ outcome.details }}</td>
                         <td>{{ outcome.category }}</td>
                         <td>{{ outcome.date }}</td>
                         <td>
-                            <!-- <button type="button" class="btn-close" onClick="deleteOutcome({{ outcome.id }})">
+                            <button type="button" class="btn-close" onClick="deleteOutcome({{ outcome.id }})">
                           </button> -->
-                        </td>
+                        <!-- </td>
                     </tr> 
-                    {% endfor %}
+                    {% endfor %} -->
                 </tbody>
             </table>
         </div>
@@ -165,5 +165,27 @@
 </div>
 </form>
 </div>
+</div>
+
+
+<div class = "popup" id="popup_settings">
+    <div class="modal-dialog">
+        <form method="POST">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="popupIncomeLabel">Settings</h5>
+                <button id = "closePopupBtn_settings" type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                    <label class="form-label">Change password</label>
+                    <input name="change_password" class="form-control" id="change_password" type="password" /> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" id="clearValues_settings">Clear</button>
+            </div>
+        </div>
+    </form>
+    </div>
 </div>
 {% endblock %}

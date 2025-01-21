@@ -14,8 +14,21 @@ document.addEventListener("DOMContentLoaded", () => {
     let closePopup_outcomeBtn = document.getElementById("closePopupBtn_outcome");
     let popup_income = document.getElementById("popup_income");
     let popup_outcome = document.getElementById("popup_outcome");
+    let show_inputBtn = document.getElementById("Income_input");
+    let show_outcomeBtn = document.getElementById("outcome_input");
+    let popup_settings = document.getElementById("popup_settings");
+    let clearValues_settingsBtn = document.getElementById("clearValues_settings");
+    let closePopup_settingsBtn = document.getElementById("closePopupBtn_settings");
+    let addSettingsBtn = document.getElementById("Settings");
+
 
     // Event listeners
+    if (addSettingsBtn) addSettingsBtn.addEventListener("click", Add_setting);
+    if (closePopup_settingsBtn) closePopup_settingsBtn.addEventListener("click", closePopup_settings);
+    if (clearValues_settingsBtn) clearValues_settingsBtn.addEventListener("click", clearValues_settings);
+
+    if (show_inputBtn) show_inputBtn.addEventListener("change", showing_income);
+    if (show_outcomeBtn) show_outcomeBtn.addEventListener("change", showing_outcome);
     if (closePopup_incomeBtn) closePopup_incomeBtn.addEventListener("click", closePopup_income);
     if (closePopup_outcomeBtn) closePopup_outcomeBtn.addEventListener("click", closePopup_outcome);
     if (loginBtn) loginBtn.addEventListener("click", login);
@@ -56,6 +69,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function settings() {
         console.log("Settings function triggered");
+    }
+
+    function Add_setting() {
+        if (popup_settings) popup_settings.style.display = "block";
+    }
+
+    function closePopup_settings() {
+        if (popup_settings) popup_settings.style.display = "none";
+    }
+
+    function clearValues_settings() {
+        document.getElementById("change_password").value = "";
     }
 
     function Add_income() {
@@ -114,4 +139,23 @@ document.addEventListener("DOMContentLoaded", () => {
           window.location.href = "/";
         });
     }
+
+
+
+    function showing_income() {
+        if (show_inputBtn.checked === true) {
+            window.location.href = "/user_data?income=true";
+        } else {
+            window.location.href = "/user_data?income=false";
+        }
+    }
+    
+    function showing_outcome() {
+        if (show_outcomeBtn.checked === true) {
+            window.location.href = "/user_data?outcome=true";
+        } else {
+            window.location.href = "/user_data?outcome=false";
+        }
+    }
+    
 });
