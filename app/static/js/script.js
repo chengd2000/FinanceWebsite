@@ -171,4 +171,145 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = `/user_data?income=${encodeURIComponent(true)}&outcome=${encodeURIComponent(true)}&filterBy=amount`;
     }
  
+
+
+
+
+// פלאגין להוספת רקע מותאם לכל גרף
+const customBackgroundPlugin = {
+    id: 'customBackground',
+    beforeDraw: (chart) => {
+        const ctx = chart.ctx; // הקשר הציור של הגרף
+        const { top, left, width, height } = chart.chartArea; // אזור הגרף
+        ctx.save(); // שמירת מצב הקשר
+        ctx.fillStyle = 'rgba(216, 214, 210, 0.92)'; // צבע הרקע
+        ctx.fillRect(left, top, width, height); // ציור מלבן הרקע
+        ctx.restore(); // שיחזור מצב הקשר
+    }
+};
+
+// הגרף הראשון (bar chart)
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['2020', '2021', '2022', '2023', '2024','2025'],
+        datasets: [{
+            label: 'Income per Year',
+            data: income_of_year,
+            backgroundColor: [
+                'rgba(35, 2, 249, 0.94)',
+                'rgba(247, 0, 0, 0.92)',
+                'rgba(12, 235, 38, 0.92)',
+                'rgba(17, 240, 240, 0.89)',
+                'rgba(223, 11, 234, 0.94)',
+                'rgba(245, 255, 64, 0.92)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: false
+    },
+    plugins: [customBackgroundPlugin]
+});
+
+
+// הגרף השני (line chart)
+const ctx2 = document.getElementById('myChart2').getContext('2d');
+const myChart2 = new Chart(ctx2, {
+    type: 'line',
+    data: {
+        labels: ['2020', '2021', '2022', '2023', '2024','2025'],
+        datasets: [{
+            label: 'balance',
+            data: sum_of_year,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 2,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: false
+    },
+    plugins: [customBackgroundPlugin]
+});
+
+// הגרף השלישי (pie chart)
+const ctx3 = document.getElementById('myChart3').getContext('2d');
+const myChart3 = new Chart(ctx3, {
+    type: 'pie',
+    data: {
+        labels: ['Food', 'Rent'],
+        datasets: [{
+            data: outcome_by_category,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                // 'rgba(255, 206, 86, 0.8)',
+                // 'rgba(75, 192, 192, 0.8)',
+                // 'rgba(153, 102, 255, 0.8)',
+                // 'rgba(255, 159, 64, 0.8)'
+            ]
+        }]
+    },
+    options: {
+        responsive: false
+    },
+    plugins: [customBackgroundPlugin]
+});
+
+// הגרף הרביעי (doughnut chart)
+const ctx4 = document.getElementById('myChart4').getContext('2d');
+const myChart4 = new Chart(ctx4, {
+    type: 'doughnut',
+    data: {
+        labels: ['Salary', 'Investments', 'Business'],
+        datasets: [{
+            data: income_by_category,
+            backgroundColor: [
+                // 'rgba(255, 99, 132, 0.8)',
+                // 'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 206, 86, 0.8)',
+                // 'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)',
+                'rgba(255, 159, 64, 0.8)'
+            ]
+        }]
+    },
+    options: {
+        responsive: false
+    },
+    plugins: [customBackgroundPlugin]
+});
+
+
+const ctx5 = document.getElementById('myChart5').getContext('2d');
+const myChart5 = new Chart(ctx5, {
+    type: 'bar',
+    data: {
+        labels: ['2020', '2021', '2022', '2023', '2024','2025'],
+        datasets: [{
+            label: 'Outcome per Year',
+            data: outcome_of_year,
+            backgroundColor: [
+                'rgba(35, 2, 249, 0.94)',
+                'rgba(247, 0, 0, 0.92)',
+                'rgba(12, 235, 38, 0.92)',
+                'rgba(17, 240, 240, 0.89)',
+                'rgba(223, 11, 234, 0.94)',
+                'rgba(245, 255, 64, 0.92)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: false
+    },
+    plugins: [customBackgroundPlugin]
+});
+
+
+
 });

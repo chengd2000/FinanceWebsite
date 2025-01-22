@@ -86,6 +86,62 @@ def user_data():
             sum+=item['amount']
         else:
             sum-=item['amount']
+
+    sum_of_year = [0, 0, 0, 0, 0, 0]
+    income_of_year = [0, 0, 0, 0, 0, 0]
+    outcome_of_year = [0, 0, 0, 0, 0, 0]
+    for item in merged:
+        if str(item['date'].year) == '2020': 
+            if item['inOrOut']=='income':
+                sum_of_year[0]+=item['amount']
+                income_of_year[0] += item['amount']
+            else:
+                sum_of_year[0]-=item['amount']
+                outcome_of_year[0] += item['amount']
+
+        if str(item['date'].year) == '2021': 
+            if item['inOrOut']=='income':
+                sum_of_year[1]+=item['amount']
+                income_of_year[1] += item['amount']
+            else:
+                sum_of_year[1]-=item['amount']
+                outcome_of_year[1] += item['amount']
+
+        if str(item['date'].year) == '2022': 
+            if item['inOrOut']=='income':
+                sum_of_year[2]+=item['amount']
+                income_of_year[2] += item['amount']
+            else:
+                sum_of_year[2]-=item['amount']
+                outcome_of_year[2] += item['amount']
+
+        if str(item['date'].year) == '2023': 
+            if item['inOrOut']=='income':
+                sum_of_year[3]+=item['amount']
+                income_of_year[3] += item['amount']
+            else:
+                sum_of_year[3]-=item['amount']
+                outcome_of_year[3] += item['amount']
+
+        if str(item['date'].year) == '2024': 
+            if item['inOrOut']=='income':
+                sum_of_year[4]+=item['amount']
+                income_of_year[4] += item['amount']
+            else:
+                sum_of_year[4]-=item['amount']
+                outcome_of_year[4] += item['amount']
+
+        if str(item['date'].year) == '2025': 
+            if item['inOrOut']=='income':
+                sum_of_year[5]+=item['amount']
+                income_of_year[5] += item['amount']
+            else:
+                sum_of_year[5]-=item['amount']   
+                outcome_of_year[5] += item['amount']  
+
+
+                                                
+
     max_income=0
     max_income_category=""
     max_income_date=""
@@ -94,6 +150,7 @@ def user_data():
             max_income=item['amount']
             max_income_category=item['category']
             max_income_date = calendar.month_name[item['date'].month] + ", " + str(item['date'].year)
+    
     max_outcome=0
     max_outcome_category=""
     max_outcome_date=""
@@ -106,7 +163,31 @@ def user_data():
     print(res)
 
 
-    return render_template('user_data.html',income='true',outcome='true', user=current_user, temp=res,sum=sum,max_income=max_income,max_income_category=max_income_category,max_income_date=max_income_date,max_outcome=max_outcome,max_outcome_category=max_outcome_category,max_outcome_date=max_outcome_date)
+    outcome_by_category = [0, 0]
+    for item in onlyOuts:
+        if item['category'] == 'Food':
+            outcome_by_category[0] += 1
+        if item['category'] == 'Rent':
+            outcome_by_category[1] += 1    
+
+    income_by_category = [0, 0, 0]
+    for item in onlyIns:
+        if item['category'] == 'Salary':
+            income_by_category[0] += 1
+        if item['category'] == 'Investments':
+            income_by_category[1] += 1  
+        if item['category'] == 'Business':
+            income_by_category[2] += 1           
+
+
+
+
+    for k in res:
+        k['date'] = str(k['date'].day) + '/' + str(k['date'].month) + '/' + str(k['date'].year)
+
+
+
+    return render_template('user_data.html',income='true',outcome='true', user=current_user, temp=res,sum=sum,max_income=max_income,max_income_category=max_income_category,max_income_date=max_income_date,max_outcome=max_outcome,max_outcome_category=max_outcome_category,max_outcome_date=max_outcome_date, sum_of_year=sum_of_year, outcome_by_category=outcome_by_category, income_by_category=income_by_category, income_of_year=income_of_year, outcome_of_year=outcome_of_year)
 
 
 

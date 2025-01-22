@@ -112,8 +112,8 @@ def sign_in_user_handler():
         print(4)
         login_user(new_user, remember=True)
         flash('Account created!', category='success')
-        return "5"
-        #return redirect(url_for('routes.user_data'))
+        # return "5"
+        return redirect(url_for('routes.user_data',income='true',outcome='true',filterBy='date'))
 
     print(250)
     return redirect(url_for('routes.sign_in'))

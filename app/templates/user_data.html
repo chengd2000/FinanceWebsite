@@ -4,8 +4,8 @@
 <div class="container mt-4">
     <!-- כותרת הדף -->
     <div class="text-center mb-4">
-        <h1 class="display-4">ניהול חשבון פיננסי</h1>
-        <p class="lead">מעקב אחר הכנסות והוצאות, גרפים ונתונים מפורטים</p>
+        <h1 class="display-4">Finance management</h1>
+        <p class="lead">Track incomes and outcomes, graphs and detailed data</p>
     </div>
 
     <!-- כפתורים לניהול -->
@@ -18,7 +18,7 @@
 
     <!-- יתרת החשבון -->
     <div class="text-center mb-4">
-        <h2 class="text-primary">מצב החשבון: <span id="account_balance">{{ sum }}</span></h2>
+        <h2 class="text-primary">account balance: <span id="account_balance">{{ sum }}</span></h2>
     </div>
 
     <!-- טבלת הכנסות והוצאות -->
@@ -39,16 +39,16 @@
                     <tr>
                         <th></th>
                         <th>
-                            <button class="btn btn-outline-primary" id="amount_filter">כמות</button>
+                            <button class="btn btn-outline-primary" id="amount_filter">amount</button>
                         </th>
                         
                         <th>                        
-                            <button class="btn btn-outline-primary" id="date_filter">תאריך</button>
+                            <button class="btn btn-outline-primary" id="date_filter">date</button>
                         </th>
                         <th> 
-                            קטגוריה
+                            category
                         </th>
-                        <th>פירוט</th>
+                        <th>details</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -73,26 +73,57 @@
     <!-- מסקנות -->
     <div class="card mb-4">
         <div class="card-header bg-info text-white">
-            <h3>מסקנות</h3>
+            <h3>conclusions</h3>
         </div>
         <div class="card-body">
             <ul>
-                <li>ההוצאה הגדולה ביותר: <strong>{{max_outcome}}</strong></li>
-                <li>הקטגוריה בה הייתה ההוצאה הגדולה ביותר: <strong>{{ max_outcome_category }}</strong></li>
-                <li>החודש עם ההוצאה הגדולה ביותר: <strong>{{ max_outcome_date }}</strong></li>
-                <li>ההכנסה הגדולה ביותר: <strong>{{max_income}}</strong></li>
-                <li>הקטגוריה בה הייתה ההכנסה הגדולה ביותר: <strong>{{ max_income_category }}</strong></li>
-                <li>החודש עם ההכנסה הגדולה ביותר: <strong>{{ max_income_date }}</strong></li>
+                <li>Biggest outcome: <strong>{{max_outcome}}</strong></li>
+                <li>Category of the biggest outcome: <strong>{{ max_outcome_category }}</strong></li>
+                <li>The month, year of the biggest outcome: <strong>{{ max_outcome_date }}</strong></li>
+                <li>The biggest income: <strong>{{max_income}}</strong></li>
+                <li>Category of the highest income: <strong>{{ max_income_category }}</strong></li>
+                <li>The month, year of the highest income: <strong>{{ max_income_date }}</strong></li>
                 
             </ul>
         </div>
     </div>
 
-    <!-- גרפים -->
-    <div class="text-center">
-        <h3>גרפים</h3>
-        <p>כאן ניתן להוסיף גרפים באמצעות ספריות כמו Chart.js</p>
+<!-- גרפים -->
+<div id="graphs">
+    <h3 class="text-center">graphs</h3>
+    <div class="graph-container">
+        <div class="graph-row"><h5>Balance by year</h5></div>
+        <div class="graph-row">
+        <canvas id="myChart2" width="820" height="400"></canvas>
     </div>
+    <div class="graph-row"><h5>Income by year</h5><h5>Outcome by year</h5></div>
+        <div class="graph-row">
+            <canvas id="myChart" width="400" height="400"></canvas>
+            <canvas id="myChart5" width="400" height="400"></canvas>
+        </div>
+        <div class="graph-row"><h5>Income by category</h5><h5>Outcome by category</h5></div>
+        <div class="graph-row">
+            <canvas id="myChart3" width="400" height="400"></canvas>
+            <canvas id="myChart4" width="400" height="400"></canvas>
+        </div>
+    </div>
+    <script>
+        const sum_of_year = {{ sum_of_year | tojson }};
+        const outcome_by_category = {{ outcome_by_category | tojson }};
+        const income_by_category = {{ income_by_category | tojson }};
+        const income_of_year = {{ income_of_year | tojson }};
+        const outcome_of_year = {{ outcome_of_year | tojson }};
+    </script>
+    
+</div>
+
+
+
+
+
+    
+    
+    
 </div>
 
 <!-- חלונות קופצים להכנסות והוצאות -->
@@ -113,10 +144,10 @@
                     <input name="date_income" class="form-control" id="date_income" type="date" />
                     <label class="form-label mt-3">Category</label>
                     <select name="category_income" id="category_income" class="form-select">
-                        <option value="" selected disabled>בחר קטגוריית הכנסה</option>
-                        <option value="Salary">שכר</option>
-                        <option value="Business">עסקים</option>
-                        <option value="Investments">השקעות</option>
+                        <option value="" selected disabled>Choose income category</option>
+                        <option value="Salary">Salary</option>
+                        <option value="Business">Business</option>
+                        <option value="Investments">Investments</option>
                     </select>
             </div>
             <div class="modal-footer">
@@ -149,9 +180,9 @@
 
     <label class="form-label mt-3">Category</label>
     <select name = "category_outcome" id="category_outcome" class="form-select" aria-label="Expense Category">
-        <option value="" selected disabled>בחר קטגוריית הוצאה</option>
-        <option value="Rent">שכירות</option>
-        <option value="Food">אוכל</option>
+        <option value="" selected disabled>Choose outcome category</option>
+        <option value="Rent">Rent</option>
+        <option value="Food">Food</option>
     </select>
 </div>
 

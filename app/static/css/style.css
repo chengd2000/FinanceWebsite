@@ -47,6 +47,7 @@ nav a {
 h1, h2, p{
     color: #fff;
 }
+
 table tbody tr.income-bg {
     background-color: green !important;
 }
@@ -55,3 +56,33 @@ table tbody tr.outcome-bg {
     background-color: red !important;
 }
 
+#graphs {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    margin: 20px 0;
+    text-align: center;
+}
+
+#graphs canvas {
+    border: 1px solid #ccc; /* מסגרת מסביב לגרפים */
+    padding: 10px;          /* ריווח פנימי */
+    background-color: rgba(216, 214, 210, 0.92); /* צבע רקע לגרף כולו */
+}
+
+.graph-container {
+    display: flex;
+    flex-direction: column;  /* יישור הגרפים לשורות */
+    align-items: center;     /* מיקום באמצע השורה */
+    gap: 20px;               /* ריווח בין השורות */
+}
+
+.graph-row {
+    display: flex;           /* יישור גרפים לשורה */
+    justify-content: center; /* מיקום באמצע השורה */
+    gap: 20px;               /* ריווח בין הגרפים בשורה */
+}
+
+h5{
+    margin: 0 100px;
+}
