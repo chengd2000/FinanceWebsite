@@ -47,7 +47,7 @@ def data_user_page_income():
         flash('Income added!', category='success')
         print("איזה עצבים")
 
-    return redirect(url_for('routes.user_data',income='true',outcome='false',filterBy='date'))
+    return redirect(url_for('routes.user_data',income='true',outcome='false',viewBy='date', amount='', date_from='1900-01-01', date_to='', category=''))
 
 @utils.route('/outcome', methods=['POST'])
 def data_user_page_outcome():
@@ -66,7 +66,7 @@ def data_user_page_outcome():
         db.session.commit()
         flash('Outcome added!', category='success')
 
-    return redirect(url_for('routes.user_data',income='false',outcome='true',filterBy='date'))
+    return redirect(url_for('routes.user_data',income='false',outcome='true',viewBy='date', amount='', date_from='1900-01-01', date_to='', category=''))
 
 @utils.route('/login', methods=['POST'])
 def login_user_handler():
@@ -77,7 +77,7 @@ def login_user_handler():
     if user and (user.password == password):
         flash('Logged in successfully!', category='success')
         login_user(user, remember=True)
-        return redirect(url_for('routes.user_data',income='true',outcome='true',filterBy='date'))
+        return redirect(url_for('routes.user_data',income='true',outcome='true',viewBy='date', amount='', date_from='1900-01-01', date_to='', category=''))
     else:
         flash('Incorrect username/password, try again.', category='error')
         return redirect(url_for('routes.login'))
@@ -113,7 +113,7 @@ def sign_in_user_handler():
         login_user(new_user, remember=True)
         flash('Account created!', category='success')
         # return "5"
-        return redirect(url_for('routes.user_data',income='true',outcome='true',filterBy='date'))
+        return redirect(url_for('routes.user_data',income='true',outcome='true',viewBy='date', amount='', date_from='1900-01-01', date_to='', category=''))
 
     print(250)
     return redirect(url_for('routes.sign_in'))
@@ -124,8 +124,7 @@ def change_password():
     if current_user.password != password_new:
         db.session.execute(update(User).where(User.id == current_user.id).values(password=password_new)) 
         db.session.commit()
-    return redirect(url_for('routes.user_data',income='true',outcome='false',filterBy='date'))
-
+    return redirect(url_for('routes.user_data',income='true',outcome='true',viewBy='date', amount='', date_from='1900-01-01', date_to='', category=''))
 # Function to convert custom objects to dictionaries
 def convert_to_dict(item, inOrOut):
     return {
@@ -136,3 +135,12 @@ def convert_to_dict(item, inOrOut):
         'details':item.details,
         'inOrOut': inOrOut
     }
+
+
+def filter_data():
+    amount = request.form.get('amount_filter')
+    date_from = request.form.get('date_filter_from')
+    date_to = request.form.get('date_filter_to')
+    category = request.form.get('category_filter')
+
+    return redirect(url_for('routes.user_data',income='true',outcome='true',viewBy='date', amount=amount, date_from=date_from, date_to=date_to, category=category))

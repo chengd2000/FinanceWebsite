@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import Blueprint, json, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, logout_user
-from .utils import change_password, convert_to_dict, login_user_handler, sign_in_user_handler, data_user_page_income, data_user_page_outcome
+from .utils import change_password, convert_to_dict, filter_data, login_user_handler, sign_in_user_handler, data_user_page_income, data_user_page_outcome
 from . import db
 from .models import Income, Outcome, User  # Adjust the import based on your project structure
 import calendar
@@ -39,12 +39,20 @@ def sign_in():
 def user_data():
     income = request.args.get('income', '')
     outcome = request.args.get('outcome', '')
-    filter=request.args.get('filterBy', '')
+    viewer=request.args.get('viewBy', '')
+    amount = request.args.get('amount', '')
+    date_from = request.args.get('date_from', '')
+    date_to = request.args.get('date_to', '')
+    category = request.args.get('category', '')
     if request.method == 'POST':
         if 'income_amount' in request.form:
             return data_user_page_income()
         elif 'outcome_amount' in request.form:
             return data_user_page_outcome()
+        elif 'amount_filter' in request.form:
+            return filter_data()
+        
+    
         else:
             return change_password()
 
@@ -79,13 +87,17 @@ def user_data():
 
     # Sorting the result list by the 'date' field
     res = sorted(res, key=lambda x: x['date'] if isinstance(x['date'], datetime) else datetime.strptime(x['date'], "%Y-%m-%d"))
-    if(filter=='amount'):
+    if(viewer=='amount'):
         res = sorted(res, key=lambda x: x['amount'], reverse=True)
     for item in merged:
         if item['inOrOut']=='income':
             sum+=item['amount']
         else:
             sum-=item['amount']
+
+    # if(filter=='date'):
+
+
 
     sum_of_year = [0, 0, 0, 0, 0, 0]
     income_of_year = [0, 0, 0, 0, 0, 0]
@@ -179,13 +191,33 @@ def user_data():
         if item['category'] == 'Business':
             income_by_category[2] += 1           
 
+    arr = []
+    for i in res:
+        is_valid = True
+        if amount != '':
+            is_valid &= i['amount'] >= int(amount)
+        if category != '':
+            is_valid &= i['category'] == category
+        if date_to != '':
+            is_valid &= i['date'] <= datetime.strptime(date_to, "%Y-%m-%d")
+        if date_from != '':
+            is_valid &= i['date'] >= datetime.strptime(date_from, "%Y-%m-%d")
+        
+        if is_valid:
+            arr.append(i)
+ 
 
+    unique_array = []
+    for item in arr:
+        if item not in unique_array:
+            unique_array.append(item)             
 
+    res = unique_array                
 
     for k in res:
         k['date'] = str(k['date'].day) + '/' + str(k['date'].month) + '/' + str(k['date'].year)
 
-
+    
 
     return render_template('user_data.html',income='true',outcome='true', user=current_user, temp=res,sum=sum,max_income=max_income,max_income_category=max_income_category,max_income_date=max_income_date,max_outcome=max_outcome,max_outcome_category=max_outcome_category,max_outcome_date=max_outcome_date, sum_of_year=sum_of_year, outcome_by_category=outcome_by_category, income_by_category=income_by_category, income_of_year=income_of_year, outcome_of_year=outcome_of_year)
 

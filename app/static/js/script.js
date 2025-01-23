@@ -22,8 +22,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let closePopup_settingsBtn = document.getElementById("closePopupBtn_settings");
     let addSettingsBtn = document.getElementById("Settings");
 
+    let addclose_filtersBtn = document.getElementById("closePopupBtn_filter");
+    let addclear_filterBtn = document.getElementById("clearValues_filter");
+    let popup_filterBtn = document.getElementById("bt_filter");
+
 
     // Event listeners
+    if (addclose_filtersBtn) addclose_filtersBtn.addEventListener("click", Addclose_filter);
+    if (addclear_filterBtn) addclear_filterBtn.addEventListener("click", Addclear_filter);
+    if (popup_filterBtn) popup_filterBtn.addEventListener("click", Add_filter);
+
     if (addSettingsBtn) addSettingsBtn.addEventListener("click", Add_setting);
     if (closePopup_settingsBtn) closePopup_settingsBtn.addEventListener("click", closePopup_settings);
     if (clearValues_settingsBtn) clearValues_settingsBtn.addEventListener("click", clearValues_settings);
@@ -60,6 +68,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function Add_filter() {
+        if (popup_filter) popup_filter.style.display = "block";
+    }
+
+    function Addclose_filter() {
+        if (popup_filter) popup_filter.style.display = "none";
+    }
+
+    function Addclear_filter() {
+        document.getElementById("clearValues_filter").value = "";
+    }
 
 
     function settings() {
@@ -75,7 +94,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function clearValues_settings() {
-        document.getElementById("change_password").value = "";
+        document.getElementById("amount_filter").value = "";
+        document.getElementById("date_filter_from").value = "";
+        document.getElementById("date_filter_to").value = "";
+        document.getElementById("category_filter").value = "";
     }
 
     function Add_income() {
@@ -117,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           body: JSON.stringify({ id: id })
         }).then((_res) => {
-          window.location.href = "/user_data?income=true&outcome=false&filterBy=date";
+          window.location.href = "/user_data?income=true&outcome=false&viewBy=date&amount=&date_from=1900-01-01&date_to=&category=";
         }).catch((error) => {
           console.error("Error deleting income:", error);
         });
@@ -131,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           body: JSON.stringify({ id: id })
         }).then((_res) => {
-            window.location.href = "/user_data?income=false&outcome=true&filterBy=date";
+            window.location.href = "/user_data?income=false&outcome=true&viewBy=date&amount=&date_from=1900-01-01&date_to=&category=";
         }).catch((error) => {
           console.error("Error deleting outcome:", error);
         });
@@ -154,21 +176,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     function showing_income() {
-        window.location.href = `/user_data?income=${encodeURIComponent(true)}&outcome=${encodeURIComponent(false)}&filterBy=date`;
+        window.location.href = `/user_data?income=${encodeURIComponent(true)}&outcome=${encodeURIComponent(false)}&viewBy=date&amount=&date_from=1900-01-01&date_to=&category=`;
       
     }
     
     function showing_outcome() {   
-        window.location.href = `/user_data?income=${encodeURIComponent(false)}&outcome=${encodeURIComponent(true)}&filterBy=date`;
+        window.location.href = `/user_data?income=${encodeURIComponent(false)}&outcome=${encodeURIComponent(true)}&viewBy=date&amount=&date_from=1900-01-01&date_to=&category=`;
     }
     function showing_both() {   
-        window.location.href = `/user_data?income=${encodeURIComponent(true)}&outcome=${encodeURIComponent(true)}&filterBy=date`;
+        window.location.href = `/user_data?income=${encodeURIComponent(true)}&outcome=${encodeURIComponent(true)}&viewBy=date&amount=&date_from=1900-01-01&date_to=&category=`;
     }
     function date_filter() {   
-        window.location.href = `/user_data?income=${encodeURIComponent(true)}&outcome=${encodeURIComponent(true)}&filterBy=date`;
+        window.location.href = `/user_data?income=${encodeURIComponent(true)}&outcome=${encodeURIComponent(true)}&viewBy=date&amount=&date_from=1900-01-01&date_to=&category=`;
     }
     function amount_filter() {   
-        window.location.href = `/user_data?income=${encodeURIComponent(true)}&outcome=${encodeURIComponent(true)}&filterBy=amount`;
+        window.location.href = `/user_data?income=${encodeURIComponent(true)}&outcome=${encodeURIComponent(true)}&viewBy=amount&amount=&date_from=1900-01-01&date_to=&category=`;
     }
  
 
