@@ -15,7 +15,22 @@
 <body>
     <header>
         <!-- ניתן להוסיף תוכן לכותרת -->
+         
     </header>
+
+     <!-- הצגת הודעות flash לפי קטגוריה -->
+     {% with messages = get_flashed_messages(with_categories=True) %}
+     {% if messages %}
+         <div class="flash-container">
+             {% for category, message in messages %}
+                 <div class="flash-message flash-{{ category }}">
+                     {{ message }}
+                 </div>
+             {% endfor %}
+         </div>
+     {% endif %}
+ {% endwith %}
+
     <main>
         {% block content %}{% endblock %}
     </main>

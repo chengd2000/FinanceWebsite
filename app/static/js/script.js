@@ -26,8 +26,18 @@ document.addEventListener("DOMContentLoaded", () => {
     let addclear_filterBtn = document.getElementById("clearValues_filter");
     let popup_filterBtn = document.getElementById("bt_filter");
 
+    let addclose_forgotBtn = document.getElementById("closePopupBtn_forgot");
+    let addclear_forgotBtn = document.getElementById("clearValues_forgot");
+    let popup_forgotBtn = document.getElementById("forgot");
+    let popup_forgot = document.getElementById("popup_forgot");
+    
+
 
     // Event listeners
+    if (addclose_forgotBtn) addclose_forgotBtn.addEventListener("click", Addclose_forgot);
+    if (addclear_forgotBtn) addclear_forgotBtn.addEventListener("click", Addclear_forgot);
+    if (popup_forgotBtn) popup_forgotBtn.addEventListener("click", Add_forgot);
+
     if (addclose_filtersBtn) addclose_filtersBtn.addEventListener("click", Addclose_filter);
     if (addclear_filterBtn) addclear_filterBtn.addEventListener("click", Addclear_filter);
     if (popup_filterBtn) popup_filterBtn.addEventListener("click", Add_filter);
@@ -78,6 +88,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function Addclear_filter() {
         document.getElementById("clearValues_filter").value = "";
+    }
+
+
+    function Add_forgot() {
+        if (popup_forgot) popup_forgot.style.display = "block";
+    }
+
+    function Addclose_forgot() {
+        if (popup_forgot) popup_forgot.style.display = "none";
+    }
+
+    function Addclear_forgot() {
+        document.getElementById("clearValues_forgot").value = "";
     }
 
 

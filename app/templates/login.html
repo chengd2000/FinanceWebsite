@@ -37,9 +37,9 @@
                 <button type="submit" id="login_submit" class="btn btn-primary">
                   Login
                 </button>
-                <button id="forgot_submit" class="btn btn-link text-decoration-none">
+                <button id="forgot" class="btn btn-link text-decoration-none" type="button">
                   Forgot Password?
-                </button>
+                </button>                
               </div>
             </fieldset>
           </form>
@@ -47,6 +47,31 @@
       </div>
     </div>
   </div>
+</div>
+  <div class = "popup" id="popup_forgot">
+    <div class="modal-dialog">
+        <form method="POST">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="popupIncomeLabel">Change Password</h5>
+                <button id = "closePopupBtn_forgot" type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <label class="form-label">Enter your username:</label>
+                    <input name="username_forgot" class="form-control" id="username_forgot" type="text" /> 
+                    <label class="form-label">Enter your email:</label>
+                    <input name="email_forgot" class="form-control" id="email_forgot" type="email" /> 
+                    <label class="form-label">Enter your new password:</label>
+                    <input name="new_password_forgot" class="form-control" id="new_password_forgot" type="password" /> 
+                  </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" id="clearValues_forgot">Clear</button>
+            </div>
+        </div>
+    </form>
+    </div>
+</div>
 </div>
 {% endblock %}
 

@@ -1,10 +1,11 @@
 from datetime import datetime
-from flask import Blueprint, json, jsonify, redirect, render_template, request, url_for
+from flask import Blueprint, Flask, flash, json, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, logout_user
-from .utils import change_password, convert_to_dict, filter_data, login_user_handler, sign_in_user_handler, data_user_page_income, data_user_page_outcome
+from .utils import change_password, convert_to_dict, filter_data, forgot_password, login_user_handler, sign_in_user_handler, data_user_page_income, data_user_page_outcome
 from . import db
-from .models import Income, Outcome, User  # Adjust the import based on your project structure
+from .models import Income, Outcome, PasswordResetForm, PasswordResetRequestForm, User  # Adjust the import based on your project structure
 import calendar
+from flask_mail import Mail, Message
 
 routes = Blueprint('routes', __name__)
 
@@ -14,8 +15,11 @@ def home():
 
 @routes.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
+    # if request.method == 'POST':
+    if 'username' in request.form:
         return login_user_handler()
+    elif 'email_forgot' in request.form:
+        return forgot_password()
     return render_template('login.html', user=current_user)
 
 
@@ -35,7 +39,7 @@ def sign_in():
 
 
 @routes.route('/user_data', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def user_data():
     income = request.args.get('income', '')
     outcome = request.args.get('outcome', '')
@@ -51,6 +55,7 @@ def user_data():
             return data_user_page_outcome()
         elif 'amount_filter' in request.form:
             return filter_data()
+        
         
     
         else:
@@ -252,3 +257,7 @@ def delete_outcome():
             return jsonify({"error": "Outcome not found or unauthorized"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+
+

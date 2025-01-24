@@ -1,6 +1,10 @@
 from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired, Email
+
 
 
 class Income(db.Model):
@@ -26,3 +30,14 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     incomes = db.relationship('Income')
     outcomes = db.relationship('Outcome')
+
+
+class PasswordResetRequestForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Reset Password')
+
+
+class PasswordResetForm(FlaskForm):
+    password = StringField('New Password', validators=[DataRequired()])
+    confirm_password = StringField('Confirm Password', validators=[DataRequired()])
+    submit = SubmitField('Reset Password')

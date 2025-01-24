@@ -74,7 +74,7 @@ def login_user_handler():
     password = request.form.get('password')
 
     user = User.query.filter_by(username=username).first()
-    if user and (user.password == password):
+    if user and check_password_hash(user.password, password):
         flash('Logged in successfully!', category='success')
         login_user(user, remember=True)
         return redirect(url_for('routes.user_data',income='true',outcome='true',viewBy='date', amount='', date_from='1900-01-01', date_to='', category=''))
@@ -100,8 +100,10 @@ def sign_in_user_handler():
         flash('Passwords don\'t match.', category='error')
     else:
         print(3)
-        new_user = User(username=username, email=email, 
-                        password=password)
+        hashed_password = generate_password_hash(password)
+        hashed_email = generate_password_hash(email)
+        new_user = User(username=username, email=hashed_email, 
+                        password=hashed_password)
         try:
             db.session.add(new_user)
             db.session.commit()
@@ -121,9 +123,9 @@ def sign_in_user_handler():
 
 def change_password():
     password_new = request.form.get('password')
-    if current_user.password != password_new:
-        db.session.execute(update(User).where(User.id == current_user.id).values(password=password_new)) 
-        db.session.commit()
+    hashed_password = generate_password_hash(password_new)
+    db.session.execute(update(User).where(User.id == current_user.id).values(password=hashed_password)) 
+    db.session.commit()
     return redirect(url_for('routes.user_data',income='true',outcome='true',viewBy='date', amount='', date_from='1900-01-01', date_to='', category=''))
 # Function to convert custom objects to dictionaries
 def convert_to_dict(item, inOrOut):
@@ -144,3 +146,24 @@ def filter_data():
     category = request.form.get('category_filter')
 
     return redirect(url_for('routes.user_data',income='true',outcome='true',viewBy='date', amount=amount, date_from=date_from, date_to=date_to, category=category))
+
+
+def forgot_password():
+    email = request.form.get('email_forgot')
+    username = request.form.get('username_forgot')
+    password_new = request.form.get('new_password_forgot')
+    
+    user = User.query.filter_by(username=username).first()
+
+    if user and check_password_hash(user.email, email):
+
+        hashed_password = generate_password_hash(password_new)
+        db.session.execute(update(User).where(User.id == user.id).values(password=hashed_password)) 
+        db.session.commit()
+
+        flash('user recognize and password change successfully!', category='success')
+
+        return redirect(url_for('routes.login'))
+    else:
+        flash('Incorrect username/email, try again.', category='error')
+        return redirect(url_for('routes.login'))
